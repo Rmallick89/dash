@@ -1065,7 +1065,9 @@
     /* subtle hairline closing the hero (mobile only): fades out toward both edges */
     .hero.s4::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; pointer-events: none;
       background: linear-gradient(90deg, transparent 0%, var(--stroke-base) 20%, var(--stroke-base) 80%, transparent 100%); }
-    .s4 .hero__cta-row { display: none; }            /* sticky bar shows from the first fold instead */
+    /* Hero CTA sits below the 3 points by default (order 6); the sticky bottom bar only takes over once the
+       whole hero has scrolled out of the viewport (see the mobile sticky CTA script). */
+    .s4 .hero__cta-row { display: flex; order: 6; width: 100%; margin: var(--sp-section-lg) 0 0; }   /* 3 points → button: 32 */
     /* Phone mock scaled to 54% with transform, NOT zoom: iOS Safari applies CSS zoom to the frame
        but not to the chat text, so the bubbles rendered at full size inside a tiny phone.
        transform scales frame + text together; negative margins give back the freed layout space
@@ -1674,7 +1676,7 @@
     els.forEach(el => io.observe(el));
   })();
 
-  // Mobile sticky CTA: show once the hero CTA is out of view, hide at final CTA
+  // Mobile sticky CTA: show once the whole hero section has scrolled past the viewport, hide at final CTA
   (function(){
     const bar = document.getElementById('mCta');
     const heroCta = document.querySelector('.hero__cta-row');
@@ -1682,7 +1684,8 @@
     if(!bar || !heroCta || !('IntersectionObserver' in window)) return;
     let heroVisible = true, finalVisible = false;
     function update(){ bar.classList.toggle('is-visible', !heroVisible && !finalVisible); }
-    new IntersectionObserver(e => { heroVisible = e[0].isIntersecting; update(); }).observe(heroCta);
+    const heroSec = document.querySelector('.hero.s4') || heroCta;   // bar stays hidden while any part of the hero is on screen
+    new IntersectionObserver(e => { heroVisible = e[0].isIntersecting; update(); }).observe(heroSec);
     if(finalSec) new IntersectionObserver(e => { finalVisible = e[0].isIntersecting; update(); }, { threshold: 0.2 }).observe(finalSec);
   })();
 
