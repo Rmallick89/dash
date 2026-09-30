@@ -1676,17 +1676,24 @@
     els.forEach(el => io.observe(el));
   })();
 
-  // Mobile sticky CTA: show once the whole hero section has scrolled past the viewport, hide at final CTA
+  // Mobile sticky CTA: show once more than half of the second section (#problem) is on screen — and stay
+  // shown below it — hide at the final CTA. (Bar is display:none above 719px, so desktop is unaffected.)
   (function(){
     const bar = document.getElementById('mCta');
-    const heroCta = document.querySelector('.hero__cta-row');
+    const second = document.getElementById('problem');
     const finalSec = document.getElementById('start');
-    if(!bar || !heroCta || !('IntersectionObserver' in window)) return;
-    let heroVisible = true, finalVisible = false;
-    function update(){ bar.classList.toggle('is-visible', !heroVisible && !finalVisible); }
-    const heroSec = document.querySelector('.hero.s4') || heroCta;   // bar stays hidden while any part of the hero is on screen
-    new IntersectionObserver(e => { heroVisible = e[0].isIntersecting; update(); }).observe(heroSec);
+    if(!bar || !second || !('IntersectionObserver' in window)) return;
+    let finalVisible = false, ticking = false;
+    function secondHalfIn(){
+      const r = second.getBoundingClientRect();
+      // visible once its top has risen above (viewport − half its height); taller-than-screen sections use half the screen
+      return r.top < window.innerHeight - Math.min(r.height, window.innerHeight) * 0.5;
+    }
+    function update(){ bar.classList.toggle('is-visible', secondHalfIn() && !finalVisible); ticking = false; }
+    window.addEventListener('scroll', () => { if(!ticking){ ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener('resize', update);
     if(finalSec) new IntersectionObserver(e => { finalVisible = e[0].isIntersecting; update(); }, { threshold: 0.2 }).observe(finalSec);
+    update();
   })();
 
   // Footer: link tiles are open on desktop, folded (tap to open) on phones
