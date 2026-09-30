@@ -1066,7 +1066,11 @@
     .hero.s4::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; pointer-events: none;
       background: linear-gradient(90deg, transparent 0%, var(--stroke-base) 20%, var(--stroke-base) 80%, transparent 100%); }
     .s4 .hero__cta-row { display: none; }            /* sticky bar shows from the first fold instead */
-    .s4 .phone { zoom: 0.54; }                       /* 290 → 157px wide */
+    /* Phone mock scaled to 54% with transform, NOT zoom: iOS Safari applies CSS zoom to the frame
+       but not to the chat text, so the bubbles rendered at full size inside a tiny phone.
+       transform scales frame + text together; negative margins give back the freed layout space
+       (290×582 → 156.6×314.3: −66.7px each side, −133.86px top/bottom). zoom: 1 cancels the ≤719px .phone zoom. */
+    .s4 .phone { zoom: 1; transform: scale(0.54); transform-origin: center; margin: -133.86px -66.7px; }   /* 290 → 157px wide */
     /* ripple rings: outer ring ≈ 85% of (screen width − 24px), max 306px, so they frame the smaller phone */
     .s4__waves { width: min(334px, calc((100vw - 24px) * .93)); height: auto; aspect-ratio: 1; }   /* ~10% smaller, tracks the phone */
     .s4__waves circle { animation-name: s4RippleM; }
