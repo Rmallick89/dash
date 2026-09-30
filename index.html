@@ -870,7 +870,8 @@
   .er.is-live .er__dots i.on { background: var(--mint); }
   @media (max-width: 719px) {
     /* same tile as desktop (graphic on top, number + label pinned to the bottom), stacked one per row */
-    .er__tile { min-height: 200px; }
+    .er__n { font-size: clamp(32px, 9.5vw, 38px); line-height: 1.05; letter-spacing: -1px; }   /* 44 → 37 @390 · 32 @320 */
+    .er__tile { min-height: 180px; }
   }
   @media (prefers-reduced-motion: reduce) { .er__bars i, .er__timer .wedge, .er__timer .sweep { transition: none; } }
 
@@ -1065,9 +1066,9 @@
     .hero.s4::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; pointer-events: none;
       background: linear-gradient(90deg, transparent 0%, var(--stroke-base) 20%, var(--stroke-base) 80%, transparent 100%); }
     .s4 .hero__cta-row { display: none; }            /* sticky bar shows from the first fold instead */
-    .s4 .phone { zoom: 0.6; }                        /* 290 → 174px wide */
+    .s4 .phone { zoom: 0.54; }                       /* 290 → 157px wide */
     /* ripple rings: outer ring ≈ 85% of (screen width − 24px), max 306px, so they frame the smaller phone */
-    .s4__waves { width: min(372px, calc((100vw - 24px) * 1.0333)); height: auto; aspect-ratio: 1; }
+    .s4__waves { width: min(334px, calc((100vw - 24px) * .93)); height: auto; aspect-ratio: 1; }   /* ~10% smaller, tracks the phone */
     .s4__waves circle { animation-name: s4RippleM; }
 
     /* Floating back-to-top competes with the sticky CTA — the CTA bar is enough on phones */
@@ -1108,8 +1109,8 @@
     .hw-step.is-done .hw-n { color: transparent; -webkit-text-stroke-color: var(--dash-green-500); }
     .hw-card, .hiw.is-live .hw-card { animation: none; opacity: 0; transform: translateY(8px); transition: opacity .4s ease, transform .4s cubic-bezier(.16,1,.3,1); }
     .hw-step.is-on .hw-card { opacity: 1; transform: none; }
-    .hw-n { font-size: 56px; line-height: 56px; letter-spacing: -2px; -webkit-text-stroke-width: 1.5px; }
-    .hw-title { margin-top: 24px; font-size: 22px; line-height: 28px; }
+    .hw-n { font-size: 44px; line-height: 44px; letter-spacing: -1.5px; -webkit-text-stroke-width: 1.25px; }   /* 56 → 44 on phones */
+    .hw-title { margin-top: 18px; font-size: 22px; line-height: 28px; }
     .hw-card { margin-top: 16px; min-width: 0; }
     .hw-card > div { flex: 1; min-width: 0; }
     .hw-card > div b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
